@@ -3,6 +3,7 @@ version : "3"
 services:
   update:
     image: update
+    build: .
     env_file: 
       - .env
     volumes:
@@ -13,10 +14,27 @@ services:
     networks:
       mynet:
         ipv4_address: "172.28.1.1"
+  create:
+    image: create
+    build: .
+    env_file: 
+      - .env
+    volumes:
+      - "./create/create:/create"
+    command: ./create
+    expose:
+      - "8080"
+    ports: 
+      - "8282:8080"
+    networks:
+      mynet:
+        ipv4_address: "172.28.1.2"
   postgres:
     image: postgres:10
     environment:
       POSTGRES_PASSWORD: "postgres"
+    expose:
+      - "5432"
     ports: 
       - "15432:5432"
     networks:
