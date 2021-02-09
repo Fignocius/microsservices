@@ -35,6 +35,23 @@ services:
     networks:
       mynet:
         ipv4_address: "172.28.1.2"
+  view:
+    image: view
+    build: .
+    env_file: 
+      - .env
+    volumes:
+      - "./view/view:/view"
+    command: ./view
+    expose:
+      - "8080"
+    ports: 
+      - "8383:8080"
+    depends_on:
+      - postgres
+    networks:
+      mynet:
+        ipv4_address: "172.28.1.3"
   postgres:
     image: postgres:10
     environment:
