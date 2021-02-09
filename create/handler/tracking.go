@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -29,24 +28,19 @@ func NewTrackingHandler(db *sqlx.DB) TrackingHandler {
 // Create is a function to Create the tracking status
 func (t Tracking) Create(c echo.Context) error {
 
-	trackingIn := Create{}
-	trackingOut := model.Tracking{
-		ID:   uuid.NewV4(),
-		Code: randStringBytes(14),
+	tracking := model.Tracking{
+		ID:          uuid.NewV4(),
+		Code:        randStringBytes(14),
+		Status:      "Coletado",
+		Description: "Entregue no posto de coleta",
 	}
 
-	err := c.Bind(&trackingIn)
+	err := t.TrackingRepository.Create(tracking)
 	if err != nil {
-		fmt.Println(trackingIn)
-		return echo.ErrBadRequest
-	}
-	trackingOut.Status = trackingIn.Status
-	trackingOut.Description = trackingIn.Description
-	err = t.TrackingRepository.Create(trackingOut)
-	if err != nil {
+		c.Logger().Error(err)
 		return echo.ErrInternalServerError
 	}
-	return c.JSON(http.StatusOK, trackingOut)
+	return c.JSON(http.StatusOK, tracking)
 }
 
 func randStringBytes(n int) string {
@@ -55,9 +49,4 @@ func randStringBytes(n int) string {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 	return string(b)
-}
-
-type Create struct {
-	Status      string `json:"status" form:"status"`
-	Description string `json:"description" form:"description"`
 }

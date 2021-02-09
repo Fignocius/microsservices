@@ -20,8 +20,10 @@ func NewTracking(db *sqlx.DB) TrackingRepository {
 
 // Update function to changes fields of the tracking
 func (t Tracking) Update(tracking model.Tracking) (err error) {
-	query := sq.Update("tracking").
+	query := psql.Update("trackings").
 		Set("status", tracking.Status).
+		Set("description", tracking.Description).
+		Set("updated_at", tracking.UpdatedAt).
 		Where(sq.Eq{"code": tracking.Code})
 	statement, args, err := query.ToSql()
 	if err != nil {
@@ -31,7 +33,7 @@ func (t Tracking) Update(tracking model.Tracking) (err error) {
 	if err != nil {
 		return
 	}
-	if _, err = stmt.Exec(args); err != nil {
+	if _, err = stmt.Exec(args...); err != nil {
 		return
 	}
 	err = stmt.Close()

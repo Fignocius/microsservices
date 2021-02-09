@@ -11,6 +11,10 @@ services:
     command: ./update
     expose:
       - "8080"
+    ports: 
+      - "8181:8080"
+    depends_on:
+      - postgres
     networks:
       mynet:
         ipv4_address: "172.28.1.1"
@@ -26,6 +30,8 @@ services:
       - "8080"
     ports: 
       - "8282:8080"
+    depends_on:
+      - postgres
     networks:
       mynet:
         ipv4_address: "172.28.1.2"
