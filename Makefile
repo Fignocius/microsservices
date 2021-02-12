@@ -20,10 +20,11 @@ deps:
 build: build-command
 
 build-command:
-	# set env to linux builder $Env:GOOS = "linux"; $Env:GOARCH = "amd64"; $Env:CGO_ENABLED = 0
+	# Running on windows set env to linux builder $Env:GOOS = "linux"; $Env:GOARCH = "amd64"; $Env:CGO_ENABLED = 0
 	$(LINUX_AMD64) go build -o update/update ./update/main.go
 	$(LINUX_AMD64) go build -o create/create ./create/main.go
 	$(LINUX_AMD64) go build -o view/view ./view/main.go
+	$(LINUX_AMD64) go build -o client/client ./client/main.go
 
 build-image:
 	@make deps
